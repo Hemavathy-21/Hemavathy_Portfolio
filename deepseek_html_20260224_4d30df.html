@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hemavathy · Cybersecurity Portfolio</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Three.js for 3D prototype -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #03050b;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(45, 139, 255, 0.12) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 200, 0.08) 0%, transparent 40%);
+            font-family: 'Inter', sans-serif;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* animated grid */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: -1;
+            animation: gridPulse 8s infinite alternate;
+        }
+
+        @keyframes gridPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            background: rgba(2, 6, 18, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(45, 139, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #b0e0ff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: #b0c8e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #00ccaa);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #3b82f6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 1.5px solid transparent;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: #0f2b44;
+            border-color: #2d8bff;
+            color: white;
+            box-shadow: 0 0 15px #2d8bff66;
+        }
+
+        .btn-primary:hover {
+            background: #1d4a70;
+            border-color: #6ab0ff;
+            box-shadow: 0 0 30px #2d8bff;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: #2d4b6e;
+            color: #c9e0ff;
+        }
+
+        .btn-outline:hover {
+            border-color: #3b82f6;
+            background: rgba(59,130,246,0.1);
+            box-shadow: 0 0 25px #1e4f7a;
+        }
+
+        /* HERO - simplified with just Hemavathy */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-abstract {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" opacity="0.3"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%233b82f6"/><stop offset="100%" stop-color="%2300ccaa"/></linearGradient></defs><path d="M0 400 Q200 300 400 400 T800 400" stroke="%233b82f6" stroke-width="2" fill="none" stroke-dasharray="10 10"/><circle cx="300" cy="300" r="60" fill="none" stroke="%233b82f6" stroke-width="2"/><circle cx="500" cy="500" r="80" fill="none" stroke="%2300ccaa" stroke-width="2"/></svg>') no-repeat center;
+            background-size: contain;
+            filter: drop-shadow(0 0 20px #3b82f6);
+            animation: float 6s infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-content h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff, #b0e0ff, #7cb8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            animation: glow 3s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 5px #3b82f6); }
+            100% { filter: drop-shadow(0 0 25px #00ccaa); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin: 2.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-item {
+            background: rgba(17, 31, 46, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid #3b82f6;
+            border-radius: 50px;
+            padding: 0.7rem 2rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #3b82f6;
+            border-color: #6ab0ff;
+        }
+
+        .stat-item i {
+            color: #3b82f6;
+            margin-right: 8px;
+        }
+
+        section {
+            padding: 5rem 0;
+            border-bottom: 1px solid #1a2a3a;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #00ccaa);
+            border-radius: 4px;
+        }
+
+        /* Education Cards with hover effects */
+        .education-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(145deg, #0f1f30, #0a1724);
+            border: 1px solid #2d4e7a;
+            border-radius: 30px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .metric-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 40px #3b82f6, 0 10px 30px -10px #1a4870;
+            transform: scale(1.03) translateY(-5px);
+            background: linear-gradient(145deg, #132a40, #0f1f30);
+        }
+
+        .metric-card:hover .metric-icon {
+            border-color: #6ab0ff;
+            box-shadow: 0 0 30px #3b82f6;
+        }
+
+        .metric-icon {
+            width: 80px;
+            height: 80px;
+            background: #1e3a5a;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #3b82f6;
+            transition: 0.3s;
+        }
+
+        .metric-icon i {
+            font-size: 2.5rem;
+            color: #6ab0ff;
+            transition: 0.3s;
+        }
+
+        .metric-card:hover .metric-icon i {
+            color: #b0e0ff;
+            transform: scale(1.1);
+        }
+
+        .metric-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3b82f6;
+            transition: 0.3s;
+        }
+
+        .metric-card:hover .metric-content h3 {
+            color: #6ab0ff;
+            text-shadow: 0 0 15px #3b82f6;
+        }
+
+        .progress-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0deg 316deg, #2d4e7a 316deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .metric-card:hover .progress-ring {
+            box-shadow: 0 0 30px #3b82f6;
+        }
+
+        .progress-ring span {
+            width: 60px;
+            height: 60px;
+            background: #0f1f30;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Project Card */
+        .project-card {
+            background: linear-gradient(145deg, #0f1f30, #0a1724);
+            border: 1px solid #2d4e7a;
+            border-radius: 30px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .project-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 50px #3b82f6;
+            transform: translateY(-5px);
+        }
+
+        .project-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 3D Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            backdrop-filter: blur(15px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: #0f1f30;
+            border: 2px solid #3b82f6;
+            border-radius: 40px;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            height: 90vh;
+            position: relative;
+            box-shadow: 0 0 50px #3b82f6;
+        }
+
+        #prototypeCanvas {
+            width: 100%;
+            height: calc(100% - 60px);
+            border-radius: 20px;
+            background: #0a121c;
+        }
+
+        .annotation-panel {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: #1e2f44;
+            border: 1px solid #3b82f6;
+            border-radius: 20px;
+            padding: 1.5rem;
+            max-width: 250px;
+            backdrop-filter: blur(10px);
+        }
+
+        .annotation-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .annotation-item:hover {
+            background: #2d4e7a;
+            transform: translateX(5px);
+        }
+
+        .annotation-dot {
+            width: 12px;
+            height: 12px;
+            background: #3b82f6;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #3b82f6;
+        }
+
+        /* Certificate Cards with hover effects */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .cert-card {
+            background: #0e1a2c;
+            border: 1px solid #2d4e7a;
+            border-radius: 25px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .cert-card.clickable:hover {
+            transform: scale(1.05) translateY(-8px);
+            border-color: #3b82f6;
+            box-shadow: 0 0 40px #3b82f6, 0 15px 30px -10px #1a4870;
+        }
+
+        .cert-card.non-clickable {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        .cert-card.non-clickable:hover {
+            transform: scale(1.02);
+            border-color: #4a6f8a;
+            box-shadow: 0 0 20px #2d4e7a;
+        }
+
+        .cert-icon {
+            width: 70px;
+            height: 70px;
+            background: #1e3a5a;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 2px solid #3b82f6;
+            transition: 0.3s;
+        }
+
+        .cert-card:hover .cert-icon {
+            border-color: #6ab0ff;
+            box-shadow: 0 0 30px #3b82f6;
+        }
+
+        .cert-icon i {
+            font-size: 2.5rem;
+            color: #6ab0ff;
+            transition: 0.3s;
+        }
+
+        .cert-card:hover .cert-icon i {
+            transform: scale(1.1);
+            color: #b0e0ff;
+        }
+
+        .badge {
+            background: #1e3a5a;
+            border: 1px solid #3b82f6;
+            border-radius: 50px;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .cert-card:hover .badge {
+            background: #2d4e7a;
+            border-color: #6ab0ff;
+        }
+
+        .pdf-container {
+            width: 100%;
+            height: 70vh;
+            border: 2px solid #3b82f6;
+            border-radius: 20px;
+            margin: 1.5rem 0;
+        }
+
+        /* Training Cards with hover */
+        .training-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .training-card {
+            background: linear-gradient(145deg, #0f1f30, #0a1724);
+            border: 1px solid #2d4e7a;
+            border-radius: 30px;
+            padding: 2rem;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .training-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 40px #3b82f6;
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        /* Contact Cards */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .contact-card {
+            background: linear-gradient(145deg, #0f1f30, #0a1724);
+            border: 1px solid #2d4e7a;
+            border-radius: 30px;
+            padding: 2rem;
+            text-align: center;
+            transition: 0.4s;
+            cursor: pointer;
+        }
+
+        .contact-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 40px #3b82f6;
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .contact-card i {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+            transition: 0.3s;
+        }
+
+        .contact-card:hover i {
+            transform: scale(1.1);
+            color: #6ab0ff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #03050b;
+            color: #6f8db0;
+        }
+
+        @media (max-width: 900px) {
+            .education-metrics { grid-template-columns: 1fr; }
+            .training-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Hemavathy</div>
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#training">Certifications</a>
+        <a href="#contact">Contact</a>
+    </div>
+</nav>
+
+<!-- HERO - Clean with just Hemavathy -->
+<section id="home" class="hero">
+    <div class="hero-abstract"></div>
+    <div class="container hero-content">
+        <h1>Hemavathy</h1>
+        <div class="hero-subtitle">Aspiring Cybersecurity Professional · Java Developer · IoT Enthusiast</div>
+        <div class="hero-stats">
+            <span class="stat-item"><i class="fas fa-certificate"></i> 9+ Certs</span>
+            <span class="stat-item"><i class="fas fa-project-diagram"></i> ICICCS 2026</span>
+            <span class="stat-item"><i class="fas fa-shield"></i> Cybertronium</span>
+        </div>
+        <div>
+            <a href="#projects" class="btn btn-primary"><i class="fas fa-arrow-right"></i> View Project</a>
+            <a href="#training" class="btn btn-outline"><i class="fas fa-certificate"></i> Certifications</a>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+    <div class="container">
+        <h2 class="section-title">About Me</h2>
+        <div style="margin-bottom: 3rem;">
+            <p style="font-size: 1.2rem;">🔐 Aspiring Cybersecurity Professional with strong foundation in Java, SQL, IoT and hands-on penetration testing. Practical experience through international training and academic projects. Actively seeking internship/entry-level role.</p>
+        </div>
+
+        <!-- Education with metrics -->
+        <div class="education-metrics">
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="metric-content">
+                    <h3>8.69 CGPA</h3>
+                    <p>B.E Computer Science Engineering</p>
+                    <p>Panimalar Engineering College (2023-27)</p>
+                </div>
+                <div class="progress-ring">
+                    <span>86.9%</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <i class="fas fa-school"></i>
+                </div>
+                <div class="metric-content">
+                    <h3>88%</h3>
+                    <p>Senior Secondary</p>
+                    <p>Vivekananda MHSS (2022-23)</p>
+                </div>
+                <div class="progress-ring">
+                    <span>88%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+    <div class="container">
+        <h2 class="section-title">Skills</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div class="metric-card" style="display: block;">
+                <i class="fas fa-terminal" style="font-size: 2.5rem; color:#3b82f6; margin-bottom:1.5rem;"></i>
+                <h3>Technical Skills</h3>
+                <div style="margin-top:1rem;">
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">Java</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">SQL</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">Penetration Testing</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">Kali Linux</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">Metasploitable</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">Nmap</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">Wireshark</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem; transition:0.3s;">IoT</span>
+                </div>
+            </div>
+            <div class="metric-card" style="display: block;">
+                <i class="fas fa-users" style="font-size: 2.5rem; color:#3b82f6; margin-bottom:1.5rem;"></i>
+                <h3>Soft Skills</h3>
+                <div style="margin-top:1rem;">
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem;">Problem Solving</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem;">Teamwork</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem;">Communication</span>
+                    <span style="background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:0.4rem 1.2rem; display:inline-block; margin:0.3rem;">Leadership</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROJECT with Interactive 3D Prototype -->
+<section id="projects">
+    <div class="container">
+        <h2 class="section-title">Innovative Project</h2>
+        <div class="project-card">
+            <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; position: relative; z-index: 1;">
+                <i class="fas fa-water" style="font-size: 4rem; color:#3b82f6;"></i>
+                <h2 style="font-size: 2rem;">Flood Resistant System using Hydraulic Lift</h2>
+            </div>
+            <p style="margin: 1.5rem 0; position: relative; z-index: 1;">IoT-based automated flood protection system with real-time sensors and hydraulic elevation. Paper accepted at ICICCS 2026 and demonstrated at PECTEAM.</p>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; position: relative; z-index: 1;">
+                <button class="btn btn-primary" onclick="openPrototype()"><i class="fas fa-cube"></i> View 3D Prototype</button>
+                <a href="https://github.com/Hemavathy-21/flood-resistant-system" target="_blank" class="btn btn-outline"><i class="fab fa-github"></i> GitHub Repo</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3D Prototype Modal -->
+<div id="prototypeModal" class="modal">
+    <div class="modal-content">
+        <span style="position: absolute; top: 1rem; right: 1.5rem; font-size: 2.5rem; color: #3b82f6; cursor: pointer; z-index: 10;" onclick="closePrototype()">&times;</span>
+        
+        <div style="display: flex; gap: 2rem; height: 100%;">
+            <!-- 3D Canvas -->
+            <div style="flex: 2; position: relative;">
+                <div id="prototypeCanvas"></div>
+            </div>
+            
+            <!-- Annotation Panel -->
+            <div class="annotation-panel">
+                <h3 style="color: #3b82f6; margin-bottom: 1rem;">🔍 System Components</h3>
+                <div class="annotation-item" onclick="focusOnPart('esp32')">
+                    <div class="annotation-dot"></div>
+                    <div>
+                        <strong>ESP32 Controller</strong>
+                        <p style="font-size: 0.8rem; color: #94a3b8;">Central processing unit</p>
+                    </div>
+                </div>
+                <div class="annotation-item" onclick="focusOnPart('sensor')">
+                    <div class="annotation-dot"></div>
+                    <div>
+                        <strong>Water Level Sensor</strong>
+                        <p style="font-size: 0.8rem; color: #94a3b8;">Real-time flood detection</p>
+                    </div>
+                </div>
+                <div class="annotation-item" onclick="focusOnPart('pump')">
+                    <div class="annotation-dot"></div>
+                    <div>
+                        <strong>Hydraulic Pump</strong>
+                        <p style="font-size: 0.8rem; color: #94a3b8;">24W lifting mechanism</p>
+                    </div>
+                </div>
+                <div class="annotation-item" onclick="focusOnPart('limit')">
+                    <div class="annotation-dot"></div>
+                    <div>
+                        <strong>Limit Switch</strong>
+                        <p style="font-size: 0.8rem; color: #94a3b8;">Over-lift prevention</p>
+                    </div>
+                </div>
+                <div class="annotation-item" onclick="focusOnPart('ups')">
+                    <div class="annotation-dot"></div>
+                    <div>
+                        <strong>UPS Backup</strong>
+                        <p style="font-size: 0.8rem; color: #94a3b8;">Power failure protection</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TRAINING with Certificates -->
+<section id="training">
+    <div class="container">
+        <h2 class="section-title">Training & Certifications</h2>
+        
+        <div class="training-grid">
+            <div class="training-card">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <i class="fas fa-globe-asia" style="font-size: 2.5rem; color:#3b82f6;"></i>
+                    <h3>Cybertronium Malaysia</h3>
+                </div>
+                <p>International Cybersecurity Training Program</p>
+                <ul style="list-style: none; margin-top: 1rem;">
+                    <li><i class="fas fa-check-circle" style="color:#3b82f6;"></i> Penetration Testing & Vulnerability Assessment</li>
+                    <li><i class="fas fa-check-circle" style="color:#3b82f6;"></i> Kali Linux, Metasploitable, Nmap, Wireshark</li>
+                </ul>
+            </div>
+            <div class="training-card">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <i class="fab fa-python" style="font-size: 2.5rem; color:#3b82f6;"></i>
+                    <h3>InternPe Python Internship</h3>
+                </div>
+                <p>Hands-on Python development</p>
+                <ul style="list-style: none; margin-top: 1rem;">
+                    <li><i class="fas fa-check-circle" style="color:#3b82f6;"></i> Digital Clock, Tic-Tac-Toe, Snake Game</li>
+                    <li><i class="fas fa-check-circle" style="color:#3b82f6;"></i> GUI applications with Tkinter</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Certificate Grid -->
+        <h3 style="font-size: 2rem; margin: 4rem 0 2rem;">Professional Certifications</h3>
+        <div class="cert-grid">
+            <!-- NPTEL Java - Clickable -->
+            <div class="cert-card clickable" onclick="showCertificate('java')">
+                <div class="cert-icon"><i class="fas fa-certificate"></i></div>
+                <h4>Programming in Java</h4>
+                <p>NPTEL · Jul-Oct 2024</p>
+                <span class="badge">Score: 58%</span>
+            </div>
+            
+            <!-- NPTEL ML - Clickable -->
+            <div class="cert-card clickable" onclick="showCertificate('ml')">
+                <div class="cert-icon"><i class="fas fa-robot"></i></div>
+                <h4>Introduction to Machine Learning</h4>
+                <p>NPTEL · Jul-Sep 2025</p>
+                <span class="badge">Score: 55%</span>
+            </div>
+            
+            <!-- Cybertron - Clickable -->
+            <div class="cert-card clickable" onclick="showCertificate('cybertron')">
+                <div class="cert-icon"><i class="fas fa-shield-alt"></i></div>
+                <h4>Certified Penetration Tester</h4>
+                <p>Cybertron · 2025</p>
+                <span class="badge">Professional</span>
+            </div>
+            
+            <!-- AWS - Clickable -->
+            <div class="cert-card clickable" onclick="showCertificate('aws')">
+                <div class="cert-icon"><i class="fab fa-aws"></i></div>
+                <h4>AWS Cloud Support Associate</h4>
+                <p>Coursera · Aug 2025</p>
+                <span class="badge">7 Courses</span>
+            </div>
+            
+            <!-- DSA - Clickable -->
+            <div class="cert-card clickable" onclick="showCertificate('dsa')">
+                <div class="cert-icon"><i class="fas fa-code"></i></div>
+                <h4>Data Structure & Algorithms</h4>
+                <p>Great Learning · Feb 2026</p>
+                <span class="badge">Intermediate</span>
+            </div>
+            
+            <!-- Aptis - NON-CLICKABLE (no onclick) -->
+            <div class="cert-card non-clickable">
+                <div class="cert-icon"><i class="fas fa-language"></i></div>
+                <h4>Aptis ESOL</h4>
+                <p>British Council · 2024</p>
+                <span class="badge">International</span>
+            </div>
+            
+            <!-- Oracle - NON-CLICKABLE (no onclick) -->
+            <div class="cert-card non-clickable">
+                <div class="cert-icon"><i class="fas fa-cloud"></i></div>
+                <h4>Oracle Cloud Infrastructure</h4>
+                <p>Generative AI · 2024</p>
+                <span class="badge">Professional</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Certificate Modal -->
+<div id="certModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width: 900px; height: auto;">
+        <span style="position: absolute; top: 1rem; right: 2rem; font-size: 3rem; cursor: pointer;" onclick="closeCertModal()">&times;</span>
+        <div id="certContent"></div>
+    </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="container">
+        <h2 class="section-title">Contact</h2>
+        
+        <div class="contact-grid">
+            <div class="contact-card">
+                <i class="fas fa-envelope"></i>
+                <h3>Email</h3>
+                <p>harinihemavathy122@gmail.com</p>
+            </div>
+            <div class="contact-card">
+                <i class="fas fa-map-pin"></i>
+                <h3>Location</h3>
+                <p>Chennai / Uthukottai, India</p>
+            </div>
+            <div class="contact-card">
+                <i class="fas fa-fingerprint"></i>
+                <h3>Social</h3>
+                <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 1rem;">
+                    <a href="https://linkedin.com/in/hemavathy21" target="_blank" style="color:#3b82f6;"><i class="fab fa-linkedin fa-2x"></i></a>
+                    <a href="https://github.com/Hemavathy-21" target="_blank" style="color:#3b82f6;"><i class="fab fa-github fa-2x"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="training-card" style="padding: 2rem;">
+            <form onsubmit="event.preventDefault(); alert('Message sent (demo)')">
+                <input type="text" placeholder="Your Name" style="width:100%; background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:1rem; color:white; margin-bottom:1rem;">
+                <input type="email" placeholder="Your Email" style="width:100%; background:#1e2f44; border:1px solid #2d4e7a; border-radius:50px; padding:1rem; color:white; margin-bottom:1rem;">
+                <textarea rows="4" placeholder="Your Message" style="width:100%; background:#1e2f44; border:1px solid #2d4e7a; border-radius:30px; padding:1rem; color:white; margin-bottom:1rem;"></textarea>
+                <button type="submit" class="btn btn-primary" style="width:100%;"><i class="fas fa-paper-plane"></i> Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Hemavathy — Cybersecurity Portfolio</p>
+</footer>
+
+<script>
+    // 3D Prototype Variables
+    let scene, camera, renderer, controls;
+    let parts = {};
+
+    function openPrototype() {
+        document.getElementById('prototypeModal').style.display = 'flex';
+        init3D();
+    }
+
+    function closePrototype() {
+        document.getElementById('prototypeModal').style.display = 'none';
+        if (renderer) {
+            renderer.dispose();
+        }
+    }
+
+    function init3D() {
+        const container = document.getElementById('prototypeCanvas');
+        
+        // Scene
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a121c);
+        
+        // Camera
+        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(5, 3, 8);
+        
+        // Renderer
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.innerHTML = '';
+        container.appendChild(renderer.domElement);
+        
+        // Controls
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.0;
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+        
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(5, 10, 7);
+        dirLight.castShadow = true;
+        dirLight.receiveShadow = true;
+        scene.add(dirLight);
+        
+        const fillLight = new THREE.PointLight(0x3b82f6, 0.5);
+        fillLight.position.set(-3, 2, 4);
+        scene.add(fillLight);
+        
+        // Grid Helper
+        const gridHelper = new THREE.GridHelper(20, 20, 0x3b82f6, 0x2d4e7a);
+        scene.add(gridHelper);
+        
+        // Create Prototype Model
+        createPrototypeModel();
+        
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+    }
+
+    function createPrototypeModel() {
+        // Base Platform
+        const baseGeo = new THREE.BoxGeometry(6, 0.3, 4);
+        const baseMat = new THREE.MeshStandardMaterial({ color: 0x2d4e7a, emissive: 0x1a2f4a });
+        const base = new THREE.Mesh(baseGeo, baseMat);
+        base.position.y = 0.15;
+        base.castShadow = true;
+        base.receiveShadow = true;
+        scene.add(base);
+        
+        // House Structure
+        const houseBase = new THREE.BoxGeometry(3, 1.5, 2.5);
+        const houseMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+        const house = new THREE.Mesh(houseBase, houseMat);
+        house.position.y = 1.5;
+        house.castShadow = true;
+        house.receiveShadow = true;
+        scene.add(house);
+        parts.house = house;
+        
+        // Roof
+        const roofGeo = new THREE.ConeGeometry(1.8, 0.8, 4);
+        const roofMat = new THREE.MeshStandardMaterial({ color: 0x475569 });
+        const roof = new THREE.Mesh(roofGeo, roofMat);
+        roof.position.y = 2.4;
+        roof.rotation.y = Math.PI/4;
+        roof.castShadow = true;
+        scene.add(roof);
+        
+        // Hydraulic Cylinders (4 pillars)
+        const cylinderGeo = new THREE.CylinderGeometry(0.3, 0.3, 2.5);
+        const cylinderMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x1a4870 });
+        
+        const positions = [
+            [-2, 1.25, -1.5],
+            [2, 1.25, -1.5],
+            [-2, 1.25, 1.5],
+            [2, 1.25, 1.5]
+        ];
+        
+        positions.forEach((pos, i) => {
+            const cylinder = new THREE.Mesh(cylinderGeo, cylinderMat);
+            cylinder.position.set(pos[0], pos[1], pos[2]);
+            cylinder.castShadow = true;
+            cylinder.receiveShadow = true;
+            scene.add(cylinder);
+            parts[`cylinder${i}`] = cylinder;
+        });
+        
+        // ESP32 Controller
+        const espGeo = new THREE.BoxGeometry(0.8, 0.2, 0.6);
+        const espMat = new THREE.MeshStandardMaterial({ color: 0x1e3a5a });
+        const esp = new THREE.Mesh(espGeo, espMat);
+        esp.position.set(-1.5, 0.5, 1.8);
+        esp.castShadow = true;
+        scene.add(esp);
+        parts.esp32 = esp;
+        
+        // LED on ESP32
+        const ledGeo = new THREE.SphereGeometry(0.1);
+        const ledMat = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x440000 });
+        const led = new THREE.Mesh(ledGeo, ledMat);
+        led.position.set(-1.5, 0.7, 1.8);
+        scene.add(led);
+        
+        // Water Level Sensor
+        const sensorBase = new THREE.BoxGeometry(0.3, 1.5, 0.3);
+        const sensorMat = new THREE.MeshStandardMaterial({ color: 0x00ccaa });
+        const sensor = new THREE.Mesh(sensorBase, sensorMat);
+        sensor.position.set(2, 0.75, 1.8);
+        sensor.castShadow = true;
+        scene.add(sensor);
+        parts.sensor = sensor;
+        
+        // Hydraulic Pump
+        const pumpGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.6);
+        const pumpMat = new THREE.MeshStandardMaterial({ color: 0x475569 });
+        const pump = new THREE.Mesh(pumpGeo, pumpMat);
+        pump.position.set(0, 0.3, -1.8);
+        pump.castShadow = true;
+        scene.add(pump);
+        parts.pump = pump;
+        
+        // Limit Switch
+        const switchGeo = new THREE.BoxGeometry(0.2, 0.4, 0.2);
+        const switchMat = new THREE.MeshStandardMaterial({ color: 0xffaa00 });
+        const limitSwitch = new THREE.Mesh(switchGeo, switchMat);
+        limitSwitch.position.set(1.8, 2.2, 1.2);
+        limitSwitch.castShadow = true;
+        scene.add(limitSwitch);
+        parts.limitSwitch = limitSwitch;
+        
+        // UPS Backup
+        const upsGeo = new THREE.BoxGeometry(1.2, 0.5, 0.8);
+        const upsMat = new THREE.MeshStandardMaterial({ color: 0x2d4b6e });
+        const ups = new THREE.Mesh(upsGeo, upsMat);
+        ups.position.set(-2.5, 0.25, -1.5);
+        ups.castShadow = true;
+        scene.add(ups);
+        parts.ups = ups;
+    }
+
+    function focusOnPart(partName) {
+        if (!controls) return;
+        
+        const targets = {
+            esp32: { pos: { x: -1.5, y: 1, z: 2 }, dist: 3 },
+            sensor: { pos: { x: 2, y: 1.5, z: 2 }, dist: 2.5 },
+            pump: { pos: { x: 0, y: 1, z: -2.5 }, dist: 3 },
+            limit: { pos: { x: 2, y: 2.5, z: 1.5 }, dist: 2 },
+            ups: { pos: { x: -3, y: 1, z: -2 }, dist: 3 }
+        };
+        
+        if (targets[partName]) {
+            const target = targets[partName];
+            camera.position.set(target.pos.x, target.pos.y, target.pos.z + target.dist);
+            controls.target.set(target.pos.x, target.pos.y, target.pos.z);
+            controls.update();
+            
+            // Highlight effect
+            if (parts[partName]) {
+                parts[partName].material.emissive.setHex(0x444444);
+                setTimeout(() => {
+                    if (parts[partName]) parts[partName].material.emissive.setHex(0x000000);
+                }, 1000);
+            }
+        }
+    }
+
+    // Certificate Functions
+    function showCertificate(type) {
+        const modal = document.getElementById('certModal');
+        const content = document.getElementById('certContent');
+        
+        let html = '';
+        if (type === 'java') {
+            html = `<h2>Programming in Java - NPTEL</h2>
+                    <div class="pdf-container">
+                        <iframe src="Programming in Java.pdf" width="100%" height="100%" style="border:none;"></iframe>
+                    </div>
+                    <p>Score: 58% (Assignments: 24.88/25, Exam: 33.01/75) · Jul-Oct 2024</p>`;
+        } else if (type === 'ml') {
+            html = `<h2>Introduction to Machine Learning - NPTEL</h2>
+                    <div class="pdf-container">
+                        <iframe src="Introduction to Machine Learning (2).pdf" width="100%" height="100%" style="border:none;"></iframe>
+                    </div>
+                    <p>Score: 55% (Assignments: 22.71/25, Exam: 32.15/75) · Jul-Sep 2025</p>`;
+        } else if (type === 'cybertron') {
+            html = `<h2>Certified Penetration Tester - Cybertron</h2>
+                    <div class="pdf-container">
+                        <iframe src="HEMAVATHY B CSE B.pdf" width="100%" height="100%" style="border:none;"></iframe>
+                    </div>
+                    <p>Professional Certification · 2025</p>`;
+        } else if (type === 'aws') {
+            html = `<h2>AWS Cloud Support Associate - Coursera</h2>
+                    <div class="pdf-container">
+                        <iframe src="HEMAVATHY B(COURSERA) (1).pdf" width="100%" height="100%" style="border:none;"></iframe>
+                    </div>
+                    <p>7 Courses · Completed Aug 2025</p>`;
+        } else if (type === 'dsa') {
+            html = `<h2>Data Structure & Algorithms in Java - Great Learning</h2>
+                    <div class="pdf-container">
+                        <iframe src="Hemavathy B (1) (1).pdf" width="100%" height="100%" style="border:none;"></iframe>
+                    </div>
+                    <p>Intermediate Level · Feb 2026</p>`;
+        } else {
+            html = `<h2>Certificate</h2><p>Click to view certificate</p>`;
+        }
+        
+        content.innerHTML = html;
+        modal.style.display = 'flex';
+    }
+    
+    function closeCertModal() {
+        document.getElementById('certModal').style.display = 'none';
+    }
+    
+    window.onclick = function(e) {
+        if (e.target === document.getElementById('certModal')) {
+            closeCertModal();
+        }
+        if (e.target === document.getElementById('prototypeModal')) {
+            closePrototype();
+        }
+    }
+</script>
+</body>
+</html>
